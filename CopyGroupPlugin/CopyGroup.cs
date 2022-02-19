@@ -27,8 +27,8 @@ namespace CopyGroupPlugin
                 Group group = element as Group; // предпочтительнее чем преобразование (Group)element в случае исключения передается null
                 XYZ groupCenter = GetElementCenter(group); // Нашли центр группы возвав к нашему классу 
                 Room room = GetRoomByPoint(doc, groupCenter); // Находим к какой комнате пренадлежит выбранная за основу группа
-                XYZ roomCenter = GetElementCenter(room); // Находим центр комнаты в которой мы выделили исходную группу
-                XYZ offset = groupCenter - roomCenter; // Находим смещение центра группы оносительно центра комнаты
+                XYZ roomCenter = GetElementCenter(room);  // Находим центр комнаты в которой мы выделили исходную группу
+                XYZ offset = groupCenter - roomCenter;   // Находим смещение центра группы оносительно центра комнаты
 
 
                 XYZ userPoint = uiDoc.Selection.PickPoint("Выберите точку");
