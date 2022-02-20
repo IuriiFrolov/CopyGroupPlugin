@@ -30,16 +30,28 @@ namespace CopyGroupPlugin
                 XYZ roomCenter = GetElementCenter(room);  // Находим центр комнаты в которой мы выделили исходную группу
                 XYZ offset = groupCenter - roomCenter;   // Находим смещение центра группы оносительно центра комнаты
 
+                // Реалезовал множественное копирование
+                while (true) //  в цикле пользователь бесконечно выбирает точку и вставляет группу, чтобы выйти надо нажать Esc 
+                {
+                    try
+                    {
+                        XYZ userPoint = uiDoc.Selection.PickPoint("Выберите точку");
+                        Room room2 = GetRoomByPoint(doc, userPoint);
+                        XYZ roomCenter2 = GetElementCenter(room2);
+                        XYZ insertionPoint = offset + roomCenter2;
 
-                XYZ userPoint = uiDoc.Selection.PickPoint("Выберите точку");
-                Room room2 = GetRoomByPoint(doc, userPoint);
-                XYZ roomCenter2 = GetElementCenter(room2);
-                XYZ insertionPoint = offset + roomCenter2;
+                        Transaction transaction = new Transaction(doc);
+                        transaction.Start("Копирование группы объектов"); 
+                        doc.Create.PlaceGroup(insertionPoint, group.GroupType); //  doc.Create. и выбрать из https://www.revitapidocs.com/2022/37523148-0dd8-7a2a-8ce9-220095429dd9.htm
+                        transaction.Commit();
+                    }
+                    catch (Autodesk.Revit.Exceptions.OperationCanceledException) //  чтобы выйти надо нажать Esc 
+                    {
+                        break;
+                    }
 
-                Transaction transaction = new Transaction(doc);
-                transaction.Start("Копирование группы объектов"); //  doc.Create. и выбрать из https://www.revitapidocs.com/2022/37523148-0dd8-7a2a-8ce9-220095429dd9.htm
-                doc.Create.PlaceGroup(insertionPoint, group.GroupType);
-                transaction.Commit();
+                }
+
             }
             catch (Autodesk.Revit.Exceptions.OperationCanceledException)
             {
